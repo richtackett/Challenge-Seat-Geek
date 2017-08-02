@@ -111,17 +111,13 @@
 		503D1EB31F2FCA80007B7ECE /* HomeAwayChallenge */ = {
 			isa = PBXGroup;
 			children = (
+				505F325B1F31767200F1D440 /* Helpers */,
 				503D1EB41F2FCA80007B7ECE /* AppDelegate.swift */,
 				503D1EBB1F2FCA80007B7ECE /* Assets.xcassets */,
 				863304CF1F313CC000133149 /* Core Data */,
-				504D801F1F308CD800D3E0FA /* Debouncer.swift */,
-				504D801D1F2FFC0E00D3E0FA /* ResponseParser.swift */,
-				50A7D3D21F2FE5A8005E9882 /* EventViewModel.swift */,
-				863304CD1F31251B00133149 /* FavoritesRepository.swift */,
 				503D1EC01F2FCA80007B7ECE /* Info.plist */,
 				503D1EBD1F2FCA80007B7ECE /* LaunchScreen.storyboard */,
 				503D1EB81F2FCA80007B7ECE /* Main.storyboard */,
-				50A7D3D41F2FED01005E9882 /* NetworkService.swift */,
 				50DA5D331F2FD4DC00452211 /* SearchDetailViewController.swift */,
 				50DA5D371F2FD50A00452211 /* SearchTableViewCell.swift */,
 				50DA5D2F1F2FD4B600452211 /* SearchViewController.swift */,
@@ -136,6 +132,17 @@
 				503D1ECB1F2FCA80007B7ECE /* Info.plist */,
 			);
 			path = HomeAwayChallengeTests;
+			sourceTree = "<group>";
+		};
+		505F325B1F31767200F1D440 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				504D801F1F308CD800D3E0FA /* Debouncer.swift */,
+				50A7D3D21F2FE5A8005E9882 /* EventViewModel.swift */,
+				50A7D3D41F2FED01005E9882 /* NetworkService.swift */,
+				504D801D1F2FFC0E00D3E0FA /* ResponseParser.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 		678B95AEC01DDC7B1AA9F394 /* Frameworks */ = {
@@ -154,6 +161,7 @@
 				863304C61F311B0200133149 /* EventFavorites.xcdatamodeld */,
 				863304C91F311BEC00133149 /* Favorites+CoreDataClass.swift */,
 				863304CA1F311BEC00133149 /* Favorites+CoreDataProperties.swift */,
+				863304CD1F31251B00133149 /* FavoritesRepository.swift */,
 			);
 			name = "Core Data";
 			sourceTree = "<group>";

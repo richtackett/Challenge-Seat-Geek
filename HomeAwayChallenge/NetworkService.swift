@@ -33,6 +33,7 @@ final class NetworkService {
     }
 }
 
+//MARK: - Private Helper Methods
 fileprivate extension NetworkService {
     func _makeRequest(query: String, page: Int) -> URLRequest? {
         guard let queryString = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
