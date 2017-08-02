@@ -72,8 +72,8 @@ extension SearchViewController: UISearchBarDelegate, UISearchControllerDelegate 
         }
         
         _becomeActive()
+        currentPage = 1
         debouncer.callback = {[weak self]() -> Void in
-            self?.currentPage = 1
             self?._search(query: searchText, page: 1)
         }
         debouncer.call()
