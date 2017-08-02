@@ -256,4 +256,8 @@ extension UIColor {
     static func navBarBlue() -> UIColor {
         return UIColor(colorLiteralRed: 26.0/255.0, green: 48.0/255.0, blue: 68.0/255.0, alpha: 1.0)
     }
+    
+    static func searchTextFieldBlue() -> UIColor {
+        return UIColor(colorLiteralRed: 48.0/255.0, green: 69.0/255.0, blue: 86.0/255.0, alpha: 1.0)
+    }
 }

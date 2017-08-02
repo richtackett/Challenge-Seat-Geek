@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let _ = CoreDataStack.shared.managedContext
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = UIColor.navBarBlue()
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = UIColor.searchTextFieldBlue()
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).textColor = UIColor.white
         
         return true
