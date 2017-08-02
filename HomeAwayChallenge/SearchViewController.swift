@@ -18,7 +18,7 @@ final class SearchViewController: UIViewController {
     fileprivate var currentPage: Int = 1
     fileprivate let debouncer = Debouncer(interval: 0.3)
     fileprivate let favoritesRepo = FavoritesRepository()
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Event Search"
@@ -89,7 +89,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SearchTableViewCell", for: indexPath)
         if let searchCell = cell as? SearchTableViewCell {
-            events[indexPath.row].isFavorite = favoritesRepo.isEventFavorite(eventID: events[indexPath.row].ID)
+            let eventID = events[indexPath.row].ID
+            events[indexPath.row].isFavorite = favoritesRepo.isEventFavorite(eventID: eventID)
             searchCell.populate(event: events[indexPath.row])
         }
         
@@ -243,7 +244,6 @@ fileprivate extension SearchViewController {
         if show {
             tableView.contentInset.bottom = adjustmentHeight
             tableView.scrollIndicatorInsets.bottom = adjustmentHeight
-            
         } else {
             tableView.contentInset.bottom = 0
             tableView.scrollIndicatorInsets.bottom = 0
