@@ -183,15 +183,15 @@ fileprivate extension SearchViewController {
     }
     
     func _handleSuccess(searchResponse: SearchResponse) {
-        totalCount = searchResponse.totalCount
-        
-        if currentPage == 1 {
-            events = searchResponse.events
-        } else {
-            events += searchResponse.events
-        }
-        
         DispatchQueue.main.async {
+            self.totalCount = searchResponse.totalCount
+            
+            if self.currentPage == 1 {
+                self.events = searchResponse.events
+            } else {
+                self.events += searchResponse.events
+            }
+            
             self._displayCorrectTableViewFooter()
             self.tableView.reloadData()
         }
