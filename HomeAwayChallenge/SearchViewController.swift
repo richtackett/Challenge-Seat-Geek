@@ -34,11 +34,15 @@ final class SearchViewController: UIViewController {
         super.viewWillAppear(animated)
         _resetNavBarColors()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        searchController.isActive = true
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        events = []
-        tableView.reloadData()
+        _clearTable()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -59,8 +63,8 @@ final class SearchViewController: UIViewController {
     }
 }
 
-//MARK: - UISearchBarDelegate
-extension SearchViewController: UISearchBarDelegate {
+//MARK: - UISearchBarDelegate and UISearchControllerDelegate
+extension SearchViewController: UISearchBarDelegate, UISearchControllerDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard searchText.isEmpty == false else {
             _clearTable()
@@ -73,6 +77,10 @@ extension SearchViewController: UISearchBarDelegate {
             self?._search(query: searchText, page: 1)
         }
         debouncer.call()
+    }
+    
+    func didPresentSearchController(_ searchController: UISearchController) {
+        searchController.searchBar.becomeFirstResponder()
     }
 }
 
@@ -128,6 +136,7 @@ fileprivate extension SearchViewController {
         searchController.searchBar.backgroundImage = nil
         searchController.searchBar.backgroundColor = UIColor.navBarBlue()
         searchController.searchBar.isTranslucent = false
+        searchController.delegate = self
         searchController.searchBar.delegate = self
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
