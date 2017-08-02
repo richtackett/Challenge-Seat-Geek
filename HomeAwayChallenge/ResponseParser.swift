@@ -22,13 +22,13 @@ final class ResponseParser {
     func parse(JSON: [String: Any]) -> SearchResponse? {
         guard let meta = JSON["meta"] as? [String: Any],
             let totalCount = meta["total"] as? Int,
-            let events = JSON["events"] as? [[String: Any]] else {
+            let eventsJSON = JSON["events"] as? [[String: Any]] else {
                 return nil
         }
         
         var searchResponse = SearchResponse()
         searchResponse.totalCount = totalCount
-        searchResponse.events = _getEvents(eventsJSON: events)
+        searchResponse.events = _getEvents(eventsJSON: eventsJSON)
         
         return searchResponse
     }
@@ -40,11 +40,6 @@ fileprivate extension ResponseParser {
         var events = [EventViewModel]()
         
         for eventJSON in eventsJSON {
-            var timeZone: String?
-            var dateStringLocal: String?
-            var dateStringUTC: String?
-            var dateTBD: Bool?
-            
             var event = EventViewModel()
             event.ID = eventJSON["id"] as? Int64 ?? 0
             event.title = eventJSON["title"] as? String
@@ -53,21 +48,31 @@ fileprivate extension ResponseParser {
                 let city = venue["city"] as? String,
                 let state = venue["state"] as? String {
                 event.location = "\(city), \(state)"
-                timeZone = venue["timezone"] as? String
-                dateStringLocal = eventJSON["datetime_local"] as? String
-                dateStringUTC = eventJSON["datetime_local"] as? String
-                dateTBD = eventJSON["datetime_tbd"] as? Bool
-                event.when = _formatDate(dateStringLocal: dateStringLocal, dateStringUTC: dateStringUTC, timeZoneString: timeZone, dateTBD: dateTBD)
             }
             
-            event = _getImage(event: event, eventJSON: eventJSON)
+
+            event = _setLocation(event: event, eventJSON: eventJSON)
+            event = _formatDate(event: event, eventJSON: eventJSON)
+            event = _setImage(event: event, eventJSON: eventJSON)
             events.append(event)
         }
         
         return events
     }
     
-    func _getImage(event: EventViewModel, eventJSON: [String: Any]) -> EventViewModel {
+    func _setLocation(event: EventViewModel, eventJSON: [String: Any]) -> EventViewModel {
+        var event = event
+        
+        if let venue = eventJSON["venue"] as? [String: Any],
+            let city = venue["city"] as? String,
+            let state = venue["state"] as? String {
+            event.location = "\(city), \(state)"
+        }
+        
+        return event
+    }
+    
+    func _setImage(event: EventViewModel, eventJSON: [String: Any]) -> EventViewModel {
         var event = event
         
         if let performers = eventJSON["performers"] as? [[String: Any]] {
@@ -82,30 +87,30 @@ fileprivate extension ResponseParser {
         return event
     }
     
-    func _formatDate(dateStringLocal: String?, dateStringUTC: String?, timeZoneString: String?, dateTBD: Bool?) -> String {
-        if let dateTBD = dateTBD, dateTBD == true {
-            return "TBD"
-        }
+    func _formatDate(event: EventViewModel, eventJSON: [String: Any]) -> EventViewModel {
+        var event = event
         
-        guard let dateStringLocal = dateStringLocal,
-            let dateStringUTC = dateStringUTC else {
-                return "No Date"
-        }
-        
-        let dateStringForFormat: String
-        if let timeZoneString = timeZoneString,
-            let timeZone = TimeZone(identifier: timeZoneString) {
-            stringToDateFormatter.timeZone = timeZone
-            dateStringForFormat = dateStringLocal
+        if let dateTBD = eventJSON["datetime_tbd"] as? Bool, dateTBD == true {
+            event.when = "TBD"
         } else {
-            stringToDateFormatter.timeZone = Locale.current.calendar.timeZone
-            dateStringForFormat = dateStringUTC
+            var dateStringForFormat: String? = nil
+            if let dateStringLocal = eventJSON["datetime_local"] as? String,
+                let venue = eventJSON["venue"] as? [String: Any],
+                let timeZoneString = venue["timezone"] as? String,
+                let timeZone = TimeZone(identifier: timeZoneString) {
+                stringToDateFormatter.timeZone = timeZone
+                dateStringForFormat = dateStringLocal
+            } else if let dateStringUTC = eventJSON["datetime_local"] as? String  {
+                stringToDateFormatter.timeZone = Locale.current.calendar.timeZone
+                dateStringForFormat = dateStringUTC
+            }
+            
+            if let dateStringForFormat = dateStringForFormat,
+                let date = stringToDateFormatter.date(from: dateStringForFormat) {
+                event.when = dateToStringFormatter.string(from: date)
+            }
         }
         
-        if let date = stringToDateFormatter.date(from: dateStringForFormat) {
-            return dateToStringFormatter.string(from: date)
-        } else {
-            return "No Date"
-        }
+        return event
     }
 }
